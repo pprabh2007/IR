@@ -8,13 +8,13 @@ class System:
 		self.retrieved_lists={}
 		self.ranks_lists={}
 		
-		self.AP10_scores={}
-		self.AP20_scores={}
-		self.AP30_scores={}
-		self.AP100_scores={}
-		self.AP200_scores={}
-		self.AP500_scores={}
-		self.AP1000_scores={}
+		self.RECALL10_scores={}
+		self.RECALL20_scores={}
+		self.RECALL30_scores={}
+		self.RECALL100_scores={}
+		self.RECALL200_scores={}
+		self.RECALL500_scores={}
+		self.RECALL1000_scores={}
 
 	def getRetrievedLists(self):
 		file = gzip.open(self.sys_input_file, "rb")
@@ -40,7 +40,7 @@ class System:
 			print(self.ranks_lists[topic_number])
 			print()
 
-	def getAPScores(self):
+	def getRECALLScores(self):
 		#print(self.ranks_lists)
 		for topic_number, data in self.ranks_lists.items():
 
@@ -53,12 +53,12 @@ class System:
 				if(rank>10):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP10_scores[topic_number]=sum_var
+			self.RECALL10_scores[topic_number]=sum_var
 
 			####################################
 
@@ -69,12 +69,12 @@ class System:
 				if(rank>20):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP20_scores[topic_number]=sum_var
+			self.RECALL20_scores[topic_number]=sum_var
 
 			######################################
 
@@ -85,12 +85,12 @@ class System:
 				if(rank>30):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP30_scores[topic_number]=sum_var
+			self.RECALL30_scores[topic_number]=sum_var
 
 			###################################
 
@@ -101,12 +101,12 @@ class System:
 				if(rank>100):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP100_scores[topic_number]=sum_var
+			self.RECALL100_scores[topic_number]=sum_var
 
 			####################################
 
@@ -117,12 +117,12 @@ class System:
 				if(rank>200):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP200_scores[topic_number]=sum_var
+			self.RECALL200_scores[topic_number]=sum_var
 
 			###################################
 
@@ -133,12 +133,12 @@ class System:
 				if(rank>500):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP500_scores[topic_number]=sum_var
+			self.RECALL500_scores[topic_number]=sum_var
 		
 			###################################
 
@@ -149,12 +149,12 @@ class System:
 				if(rank>1000):
 					break
 
-				sum_var = sum_var + ((i+1)*(1/rank))
+				sum_var = sum_var + 1
 				count = count + 1.0
 
 			if(count != 0.0):	
 				sum_var = sum_var / x
-			self.AP1000_scores[topic_number]=sum_var
+			self.RECALL1000_scores[topic_number]=sum_var
 
 	def getRankLists(self, eval):
 		for topic_num in eval.relevant_lists.keys():
@@ -215,7 +215,7 @@ class Evaluation:
 
 	def getScores(self):
 		for system in self.systems:
-			system.getAPScores()
+			system.getRECALLScores()
 
 	def generateTable(self):
 
@@ -223,10 +223,10 @@ class Evaluation:
 		for system in self.systems:
 			result = result + system.sys_name+"\n"
 
-			for key in system.AP10_scores.keys():
-				result = result+str(key)+"\t"+str(system.AP10_scores[key])+"\t"+str(system.AP20_scores[key])+"\t"+str(system.AP30_scores[key])+"\t"+str(system.AP100_scores[key])+"\t"+str(system.AP200_scores[key])+"\t"+str(system.AP500_scores[key])+"\t"+str(system.AP1000_scores[key])+"\n"
+			for key in system.RECALL10_scores.keys():
+				result = result+str(key)+"\t"+str(system.RECALL10_scores[key])+"\t"+str(system.RECALL20_scores[key])+"\t"+str(system.RECALL30_scores[key])+"\t"+str(system.RECALL100_scores[key])+"\t"+str(system.RECALL200_scores[key])+"\t"+str(system.RECALL500_scores[key])+"\t"+str(system.RECALL1000_scores[key])+"\n"
 
-		file = open ("aps.txt", "w")
+		file = open ("RECALLs.txt", "w")
 		file.write(result)
 		file.close()
 	#def printScores(self):
