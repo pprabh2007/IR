@@ -7,8 +7,7 @@ class System:
 		self.sys_input_file = dir_name+"/"+sys_input_file
 		self.sys_name = sys_input_file
 		self.retrieved_lists={}
-		self.CG={}
-		self.DCG={}
+		self.EBP={}
 
 	def getRetrievedLists(self):
 		file = gzip.open(self.sys_input_file, "rb")
@@ -28,23 +27,7 @@ class System:
 		#print(self.retrieved_lists)
 		file.close()
 
-	def getCG(self, eval):
-		for topic_number in eval.relevant_lists.keys():
-			#print(topic_number)
-			ans = 0
-			current_list = self.retrieved_lists[topic_number]
-			for elem in current_list:
-				doc = elem[0]
-				score=elem[1]
-
-				try:
-					ans = ans + eval.relevant_lists[topic_number][doc]
-				except:
-					pass
-
-			self.CG[topic_number]=ans
-
-	def getDCG(self, eval):
+	def getEBP(self, eval, p):
 		for topic_number in eval.relevant_lists.keys():
 			ans = 0
 			current_list = self.retrieved_lists[topic_number]
@@ -57,11 +40,11 @@ class System:
 					if(i==0):
 						ans = ans + val
 					else:
-						ans = ans +(val/math.log2(i+1))
+						ans = ans +(val*(p**(i)))
 
 				except:
 					pass
-			self.DCG[topic_number]=ans
+			self.EBP[topic_number]=ans
 
 class Evaluation:
 	
@@ -93,36 +76,22 @@ class Evaluation:
 			s.getRetrievedLists()
 			self.systems.append(s)
 
-	def getScores(self):
+	def getScores(self, p):
 		for system in self.systems:
-			system.getCG(self)
-			system.getDCG(self)
+			system.getEBP(self, p)
 
-	def generateTable(self):
+	def generateTable(self, p):
 
 		result=""
 		for system in self.systems:
 			result = result + system.sys_name+"\n\n"
 
-			for a, b in system.CG.items():
+			for a, b in system.EBP.items():
 				result = result + str(a) + "\t" + str(b) +"\n"
 
 			result = result + "\n\n"
 
-		file = open ("results_CG.txt", "w")
-		file.write(result)
-		file.close()
-
-		result=""
-		for system in self.systems:
-			result = result + system.sys_name+"\n\n"
-
-			for a, b in system.DCG.items():
-				result = result + str(a) + "\t" + str(b) +"\n"
-
-			result = result + "\n\n"
-
-		file = open ("results_DCG.txt", "w")
+		file = open ("results_EBP_"+str(p)+".txt", "w")
 		file.write(result)
 		file.close()
 	#def printScores(self):
