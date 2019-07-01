@@ -269,7 +269,7 @@ class Evaluation:
 			result = result + system.sys_name+"\n"
 
 			for a in system.DCG10.keys():
-				result = result+str(a)+"\t"+str(system.DCG10[a])+"\t"+str(system.DCG20[a])+"\t+"+str(system.DCG30[a])+"\t"+str(system.DCG100[a])+"\t"+str(system.DCG200[a])+"\t"+str(system.DCG500[a])+"\t"+str(system.DCG1000[a])+"\n"
+				result = result+str(a)+"\t"+str(system.DCG10[a])+"\t"+str(system.DCG20[a])+"\t"+str(system.DCG30[a])+"\t"+str(system.DCG100[a])+"\t"+str(system.DCG200[a])+"\t"+str(system.DCG500[a])+"\t"+str(system.DCG1000[a])+"\n"
 
 
 		file = open ("results_DCG.txt", "w")
