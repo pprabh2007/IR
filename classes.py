@@ -8,7 +8,13 @@ class System:
 		self.sys_name = sys_input_file
 		self.retrieved_lists={}
 		self.CG={}
-		self.DCG={}
+		self.DCG10={}
+		self.DCG20={}
+		self.DCG30={}
+		self.DCG100={}
+		self.DCG200={}
+		self.DCG500={}
+		self.DCG1000={}
 
 	def getRetrievedLists(self):
 		file = gzip.open(self.sys_input_file, "rb")
@@ -46,9 +52,16 @@ class System:
 
 	def getDCG(self, eval):
 		for topic_number in eval.relevant_lists.keys():
+
+
+			##############################################
 			ans = 0
 			current_list = self.retrieved_lists[topic_number]
 			for i, elem in enumerate(current_list):
+
+				if(i>10):
+					break
+
 				doc = elem[0]
 				score=elem[1]
 
@@ -61,7 +74,145 @@ class System:
 
 				except:
 					pass
-			self.DCG[topic_number]=ans
+			self.DCG10[topic_number]=ans
+
+
+			##############################################
+			ans = 0
+			current_list = self.retrieved_lists[topic_number]
+			for i, elem in enumerate(current_list):
+
+				if(i>20):
+					break
+
+				doc = elem[0]
+				score=elem[1]
+
+				try:
+					val = eval.relevant_lists[topic_number][doc]
+					if(i==0):
+						ans = ans + val
+					else:
+						ans = ans +(val/math.log2(i+1))
+
+				except:
+					pass
+			self.DCG20[topic_number]=ans
+
+
+			##############################################
+			ans = 0
+			current_list = self.retrieved_lists[topic_number]
+			for i, elem in enumerate(current_list):
+
+				if(i>30):
+					break
+
+				doc = elem[0]
+				score=elem[1]
+
+				try:
+					val = eval.relevant_lists[topic_number][doc]
+					if(i==0):
+						ans = ans + val
+					else:
+						ans = ans +(val/math.log2(i+1))
+
+				except:
+					pass
+			self.DCG30[topic_number]=ans
+
+
+			##############################################
+			ans = 0
+			current_list = self.retrieved_lists[topic_number]
+			for i, elem in enumerate(current_list):
+
+				if(i>100):
+					break
+
+				doc = elem[0]
+				score=elem[1]
+
+				try:
+					val = eval.relevant_lists[topic_number][doc]
+					if(i==0):
+						ans = ans + val
+					else:
+						ans = ans +(val/math.log2(i+1))
+
+				except:
+					pass
+			self.DCG100[topic_number]=ans
+
+
+			##############################################
+			ans = 0
+			current_list = self.retrieved_lists[topic_number]
+			for i, elem in enumerate(current_list):
+
+				if(i>200):
+					break
+
+				doc = elem[0]
+				score=elem[1]
+
+				try:
+					val = eval.relevant_lists[topic_number][doc]
+					if(i==0):
+						ans = ans + val
+					else:
+						ans = ans +(val/math.log2(i+1))
+
+				except:
+					pass
+			self.DCG200[topic_number]=ans
+
+
+			##############################################
+			ans = 0
+			current_list = self.retrieved_lists[topic_number]
+			for i, elem in enumerate(current_list):
+
+				if(i>500):
+					break
+
+				doc = elem[0]
+				score=elem[1]
+
+				try:
+					val = eval.relevant_lists[topic_number][doc]
+					if(i==0):
+						ans = ans + val
+					else:
+						ans = ans +(val/math.log2(i+1))
+
+				except:
+					pass
+			self.DCG500[topic_number]=ans
+
+
+			##############################################
+			ans = 0
+			current_list = self.retrieved_lists[topic_number]
+			for i, elem in enumerate(current_list):
+
+				if(i>1000):
+					break
+
+				doc = elem[0]
+				score=elem[1]
+
+				try:
+					val = eval.relevant_lists[topic_number][doc]
+					if(i==0):
+						ans = ans + val
+					else:
+						ans = ans +(val/math.log2(i+1))
+
+				except:
+					pass
+			self.DCG1000[topic_number]=ans
 
 class Evaluation:
 	
@@ -115,12 +266,11 @@ class Evaluation:
 
 		result=""
 		for system in self.systems:
-			result = result + system.sys_name+"\n\n"
+			result = result + system.sys_name+"\n"
 
-			for a, b in system.DCG.items():
-				result = result + str(a) + "\t" + str(b) +"\n"
+			for a in system.DCG10.keys():
+				result = result+str(a)+"\t"+str(system.DCG10[a])+"\t"+str(system.DCG20[a])+"\t+"+str(system.DCG30[a])+"\t"+str(system.DCG100[a])+"\t"+str(system.DCG200[a])+"\t"+str(system.DCG500[a])+"\t"+str(system.DCG1000[a])+"\n"
 
-			result = result + "\n\n"
 
 		file = open ("results_DCG.txt", "w")
 		file.write(result)
